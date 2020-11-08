@@ -7,7 +7,6 @@
     var keyDown = 40;
     var canvas = null;
     var ctx = null;
-    var ctx = null;
     var lastPress = null;
     var pause = false;
     var gameover = false;
@@ -18,6 +17,7 @@
     var highscoresScene = null;
     var body = [];
     var food = null;
+    var ring = null;
     //var wall = [];
     var highscores = [];
     var posHighscore = 10;
@@ -25,6 +25,7 @@
     var score = 0;
     var iBody = new Image();
     var iFood = new Image();
+    var iRing = new Image();
     var aEat = new Audio();
     var aDie = new Audio();
 
@@ -137,10 +138,13 @@
     // Load assets
         iBody.src = 'assets/body.png';
         iFood.src = 'assets/fruit.png';
+        iRing.src = 'assets/ring.png';
         aEat.src = 'assets/chomp.oga';
         aDie.src = 'assets/dies.oga';
     // Create food
         food = new Rectangle(80, 80, 10, 10);
+    // Create ring
+        ring = new Rectangle(10, 70, 10, 10);
     // Create walls
         //wall.push(new Rectangle(50, 50, 10, 10));
         //wall.push(new Rectangle(50, 100, 10, 10));
@@ -189,6 +193,8 @@
         body.push(new Rectangle(0, 0, 10, 10));
         food.x = random(canvas.width / 10 - 1) * 10;
         food.y = random(canvas.height / 10 - 1) * 10;
+        ring.x = random(canvas.width / 10 - 1) * 10;
+        ring.y = random(canvas.height / 10 - 1) * 10;
         gameover = false;
     };
 
@@ -211,13 +217,16 @@
     // Draw food
         ctx.strokeStyle = '#f00';
         food.drawImage(ctx, iFood);
-        // Draw score
+    // Draw ring
+        ctx.strokeStyle = '#ffff00';
+        ring.drawImage(ctx, iRing);
+    // Draw score
         ctx.fillStyle = '#fff';
         ctx.textAlign = 'left';
         ctx.fillText('Score: ' + score, 0, 10);
-        // Debug last key pressed
+    // Debug last key pressed
         //ctx.fillText('Last Press: '+lastPress,0,20);
-        // Draw pause
+    // Draw pause
         if (pause) {
             ctx.textAlign = 'center';
             if (gameover) {
@@ -287,6 +296,18 @@
                 food.x = random(canvas.width / 10 - 1) * 10;
                 food.y = random(canvas.height / 10 - 1) * 10;
                 aEat.play();
+            }
+            // Ring Intersects
+            if (body[0].intersects(ring)) {
+                score += 10;
+                ring.x = random(canvas.width / 10 - 1) * 10;
+                ring.y = random(canvas.height / 10 - 1) * 10;
+                aEat.play();
+            }
+
+            if (food.intersects(ring)) {
+                ring.x = random(canvas.width / 10 - 1) * 10;
+                ring.y = random(canvas.height / 10 - 1) * 10;
             }
             // Wall Intersects
             //for (i = 0, l = wall.length; i < l; i += 1) {
