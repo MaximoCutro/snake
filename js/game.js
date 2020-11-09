@@ -159,6 +159,45 @@
         repaint();
     }
 
+    ////////////////
+
+    function drawRing() {
+        ctx.strokeStyle = '#ffff00';
+        ring.drawImage(ctx, iRing);
+    }
+
+
+    function ringIntersec() {
+        ring.x = random(canvas.width / 10 - 1) * 10;
+        ring.y = random(canvas.height / 10 - 1) * 10;
+    }
+
+    var xhr = new XMLHttpRequest();
+    var url = 'www.jsonplaceholder.com?score=100';
+
+    function consumeAPI(url) {
+        const promise = new Promise((resolve, reject) => {//declaración de promise
+            let request = new XMLHttpRequest();
+            request.open('GET', url, true);
+            request.onreadystatechange = function(event) {
+                if(request.readyState === 4) {
+                    if(request.status >= 200 && request.status < 400) {
+                        let response = request.responseText;
+                        let data = JSON.parse(response);  
+                        resolve(data);
+                    }
+                    else {
+                        reject('Error');
+                    }
+                }
+            };
+            request.send();
+        });
+        return promise;
+    }
+
+    ///////////////
+
     // Main Scene
     mainScene = new Scene();
 
@@ -303,6 +342,22 @@
                 ring.x = random(canvas.width / 10 - 1) * 10;
                 ring.y = random(canvas.height / 10 - 1) * 10;
                 aEat.play();
+                fetch('https://jsonplaceholder.typicode.com/todos/'+score)
+                .then(
+                    function(response) {
+                    if (response.status !== 200) {
+                        console.log('There was a problem. Code: ' +
+                        response.status);
+                        return;
+                    }
+                    response.json().then(function(data) {
+                        console.log('Score: '+data.id);
+                    });
+                    }
+                )
+                .catch(function(err) {
+                    console.log('Fetch Error :-S', err);
+                });
             }
 
             if (food.intersects(ring)) {
