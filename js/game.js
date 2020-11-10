@@ -154,49 +154,11 @@
     if (localStorage.highscores) {
         highscores = localStorage.highscores.split(',');
     }
-        // Start game
+    
+    // Start game
         run();
         repaint();
     }
-
-    ////////////////
-
-    function drawRing() {
-        ctx.strokeStyle = '#ffff00';
-        ring.drawImage(ctx, iRing);
-    }
-
-
-    function ringIntersec() {
-        ring.x = random(canvas.width / 10 - 1) * 10;
-        ring.y = random(canvas.height / 10 - 1) * 10;
-    }
-
-    var xhr = new XMLHttpRequest();
-    var url = 'www.jsonplaceholder.com?score=100';
-
-    function consumeAPI(url) {
-        const promise = new Promise((resolve, reject) => {//declaración de promise
-            let request = new XMLHttpRequest();
-            request.open('GET', url, true);
-            request.onreadystatechange = function(event) {
-                if(request.readyState === 4) {
-                    if(request.status >= 200 && request.status < 400) {
-                        let response = request.responseText;
-                        let data = JSON.parse(response);  
-                        resolve(data);
-                    }
-                    else {
-                        reject('Error');
-                    }
-                }
-            };
-            request.send();
-        });
-        return promise;
-    }
-
-    ///////////////
 
     // Main Scene
     mainScene = new Scene();
@@ -232,8 +194,12 @@
         body.push(new Rectangle(0, 0, 10, 10));
         food.x = random(canvas.width / 10 - 1) * 10;
         food.y = random(canvas.height / 10 - 1) * 10;
-        ring.x = random(canvas.width / 10 - 1) * 10;
-        ring.y = random(canvas.height / 10 - 1) * 10;
+        ring.x = 500;
+        ring.y = 500;
+        setTimeout(function() {
+            ring.x = random(canvas.width / 10 - 1) * 10;
+            ring.y = random(canvas.height / 10 - 1) * 10;
+        }, (Math.floor(Math.random() * 10) + 1)*1000);
         gameover = false;
     };
 
@@ -339,8 +305,12 @@
             // Ring Intersects
             if (body[0].intersects(ring)) {
                 score += 10;
-                ring.x = random(canvas.width / 10 - 1) * 10;
-                ring.y = random(canvas.height / 10 - 1) * 10;
+                ring.x = 500;
+                ring.y = 500;
+                setTimeout(function() {
+                    ring.x = random(canvas.width / 10 - 1) * 10;
+                    ring.y = random(canvas.height / 10 - 1) * 10;
+                }, (Math.floor(Math.random() * 10) + 1)*1000);
                 aEat.play();
                 fetch('https://jsonplaceholder.typicode.com/todos/'+score)
                 .then(
